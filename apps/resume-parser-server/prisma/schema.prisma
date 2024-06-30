@@ -1,0 +1,72 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Resume {
+  createdAt      DateTime     @default(now())
+  educationList  String?
+  educations     Education[]
+  emailAddress   String?
+  experienceList String?
+  experiences    Experience[]
+  firstName      String?
+  id             String       @id @default(cuid())
+  languages      Language[]
+  lastName       String?
+  phoneNumber    String?
+  resumeHash     String?
+  updatedAt      DateTime     @updatedAt
+}
+
+model Experience {
+  companyName         String?
+  createdAt           DateTime @default(now())
+  currentJob          Boolean?
+  fromMonth           String?
+  fromYear            String?
+  id                  String   @id @default(cuid())
+  jobResponsibilities String?
+  jobTitle            String?
+  resume              Resume?  @relation(fields: [resumeId], references: [id])
+  resumeId            String?
+  toMonth             String?
+  toYear              String?
+  updatedAt           DateTime @updatedAt
+}
+
+model Education {
+  createdAt       DateTime @default(now())
+  fieldOfStudy    String?
+  fromMonth       String?
+  fromYear        String?
+  id              String   @id @default(cuid())
+  institutionName String?
+  resume          Resume?  @relation(fields: [resumeId], references: [id])
+  resumeId        String?
+  toMonth         String?
+  toYear          String?
+  typeField       String?
+  updatedAt       DateTime @updatedAt
+}
+
+model Language {
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  language  String?
+  resume    Resume?  @relation(fields: [resumeId], references: [id])
+  resumeId  String?
+  updatedAt DateTime @updatedAt
+}
+
+model ErrorModel {
+  code      Int?
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  message   String?
+  updatedAt DateTime @updatedAt
+}
